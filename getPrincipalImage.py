@@ -19,6 +19,7 @@ im = 'template/templatePreenchido.png'
 
 
 
+
 #alinhamento da imagem 
 imagemAlinhada =  align.alignImages(im)
 cv2.imwrite('template/processadaAlinhada.png', imagemAlinhada)
@@ -34,7 +35,7 @@ gabaritoInteresse = cv2.imread('template/gabarito.png')
 
 
 
-bolhas, umArrayDePontos, contornosCirculos  =  bubble.bolhas(gabaritoInteresse)
+bolhas, alternativaMarcada, contornosCirculos  =  bubble.bolhas(gabaritoInteresse)
 
 nomalizacao =  np.ones(dim)
 gabaritoInteresse = cv2.addWeighted(gabaritoInteresse, 1.07, np.zeros(gabaritoInteresse.shape, gabaritoInteresse.dtype),0,0)
@@ -55,7 +56,7 @@ cnts = cnts[0] if imutils.is_cv4() else cnts[1]
 
 questions = []
 
-#bolhas, umArrayDePontos, contornosCirculos  =  bubble.bolhas(gabaritoInteresse.copy())
+#bolhas, alternativaMarcada, contornosCirculos  =  bubble.bolhas(gabaritoInteresse.copy())
 
 for c in cnts:
     (x, y, w, h) = cv2.boundingRect(c)
@@ -98,14 +99,17 @@ for i in np.arange(0, len(questions), 30):
 
 #matrizRespostas = np.empty((0,4))
 #print(matrizRespostas.shape)
-posicaoRespostas = np.empty(0,int)
+#posicaoRespostas = np.empty(0,int)
+posicaoRespostas = []
+
+
 questao = 0
 
 questionCnts = contours.sort_contours(questionCnts, method="top-to-bottom")[0]
 
 questaoMarcada = []
 
-questionCnts = np.asarray(questionCnts)
+#questionCnts = np.asarray(questionCnts)
 
 questions =  np.arange(450).reshape(450//30,30)
 
@@ -124,7 +128,8 @@ for (q, i) in enumerate(np.arange(0, len(questionCnts), 30)):
 
             cv2.rectangle(bolhas, (x, y), (x+w, y+h), (0, 0, 255), )
 
-        posicaoRespostas = np.append(posicaoRespostas,(l))
+        #posicaoRespostas = np.append(posicaoRespostas,(l))
+        posicaoRespostas.append(l)
         mask = np.zeros(thresh.shape, dtype="uint8")
         cv2.drawContours(mask, [k], -1, (255,0,0), -1)
         mask = cv2.bitwise_and(thresh, thresh, mask=mask)
@@ -147,18 +152,21 @@ for (q, i) in enumerate(np.arange(0, len(questionCnts), 30)):
 
     #cv2.drawContours(gabarito, [cnts[k]], -1, color, 3) 
 
-print((Marcada))
-print(len(xd))
-
-print(len(Marcada))
-print(len(questions))
-print(len(umArrayDePontos))
-print(len(contornosCirculos.shape))
-print(len(questionCnts.shape))
+#xd = [x for x in xd if tuple(x) == (0, 0)]
 
 
+print(type(xd))
+print(type(Marcada))
+print(type(posicaoRespostas))
+print(type(questions))
+print(type(alternativaMarcada))
+print(type(contornosCirculos))
+print(type(questionCnts))
 
-#testeMatch =  cv2.matchShapes(questionCnts,umArrayDePontos,1,0.0)
+
+
+
+#testeMatch =  cv2.matchShapes(questionCnts,alternativaMarcada,1,0.0)
 
 #print((posicaoRespostas))
 
